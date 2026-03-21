@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Darshana Analysis -- Rust Rewrite</title>
+<style>
+
+:root {
+  --bg: #0a0a0a;
+  --card: #141414;
+  --border: #2a2a2a;
+  --text: #e0e0e0;
+  --muted: #888;
+  --accent: #f59e0b;
+  --accent2: #8b5cf6;
+  --red: #ef4444;
+  --green: #22c55e;
+  --blue: #3b82f6;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Georgia', serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.7;
+  padding: 2rem;
+  max-width: 920px;
+  margin: 0 auto;
+}
+
+@media (max-width: 640px) {
+  body { padding: 1rem; }
+  h1 { font-size: 1.5rem; }
+}
+
+h1 {
+  font-size: 2rem;
+  color: var(--accent);
+  border-bottom: 2px solid var(--accent);
+  padding-bottom: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.subtitle {
+  color: var(--muted);
+  font-style: italic;
+  margin-bottom: 2rem;
+  font-size: 0.95rem;
+}
+
+h2 {
+  font-size: 1.3rem;
+  color: var(--accent2);
+  margin-top: 2.5rem;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+h2 .tag {
+  font-size: 0.7rem;
+  background: var(--accent2);
+  color: #fff;
+  padding: 2px 8px;
+  border-radius: 3px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+h3 {
+  font-size: 1.05rem;
+  color: var(--text);
+  margin-top: 1.2rem;
+  margin-bottom: 0.6rem;
+}
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.card-accent {
+  border-left: 3px solid var(--accent);
+}
+
+.routing-bar {
+  display: flex;
+  gap: 0.8rem;
+  flex-wrap: wrap;
+  margin-top: 0.8rem;
+}
+
+.routing-item {
+  background: var(--border);
+  padding: 0.4rem 0.8rem;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  font-family: monospace;
+}
+
+.routing-item.active {
+  background: var(--accent);
+  color: #000;
+  font-weight: bold;
+}
+
+.routing-item.purple {
+  background: var(--accent2);
+  color: #fff;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1rem 0;
+  font-size: 0.9rem;
+}
+
+th {
+  text-align: left;
+  padding: 0.6rem;
+  border-bottom: 2px solid var(--accent);
+  color: var(--accent);
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+td {
+  padding: 0.6rem;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+}
+
+tr:hover td {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.synthesis-box {
+  background: linear-gradient(135deg, rgba(245,158,11,0.08), rgba(139,92,246,0.08));
+  border: 1px solid var(--accent);
+  padding: 1.5rem;
+  border-radius: 8px;
+  margin: 1rem 0;
+}
+
+.signal-box {
+  background: rgba(34, 197, 94, 0.1);
+  border: 1px solid var(--green);
+  padding: 1.2rem;
+  border-radius: 8px;
+  margin: 1rem 0;
+  text-align: center;
+  font-size: 1.05rem;
+  font-weight: bold;
+  color: var(--green);
+}
+
+.warning-box {
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid var(--red);
+  padding: 1rem;
+  border-radius: 8px;
+  margin: 1rem 0;
+  font-size: 0.9rem;
+}
+
+.maya-box {
+  background: rgba(139, 92, 246, 0.1);
+  border: 1px solid var(--accent2);
+  padding: 1rem;
+  border-radius: 8px;
+  margin: 1rem 0;
+  font-size: 0.9rem;
+}
+
+blockquote {
+  border-left: 3px solid var(--accent);
+  padding: 0.8rem 1.2rem;
+  margin: 1rem 0;
+  background: rgba(245, 158, 11, 0.05);
+  font-style: italic;
+}
+
+.mono {
+  font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+  font-size: 0.85rem;
+}
+
+code {
+  font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+  background: var(--border);
+  padding: 0.15rem 0.4rem;
+  border-radius: 3px;
+  font-size: 0.85rem;
+}
+
+pre {
+  font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+  background: #1a1a2e;
+  padding: 1.2rem;
+  border-radius: 8px;
+  overflow-x: auto;
+  font-size: 0.85rem;
+  line-height: 1.6;
+  margin: 1rem 0;
+}
+
+/* Guna bar chart */
+.guna-bar-container {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  margin: 0.4rem 0;
+}
+
+.guna-label {
+  width: 70px;
+  font-family: monospace;
+  font-size: 0.85rem;
+  text-align: right;
+}
+
+.guna-track {
+  flex: 1;
+  height: 24px;
+  background: var(--border);
+  border-radius: 4px;
+  overflow: hidden;
+  position: relative;
+}
+
+.guna-fill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 6px;
+  font-size: 0.7rem;
+  font-family: monospace;
+  color: #000;
+  font-weight: bold;
+}
+
+.guna-sattva { background: var(--green); }
+.guna-rajas { background: var(--accent); }
+.guna-tamas { background: var(--red); }
+
+/* Pie chart (CSS-only conic gradient) */
+.pie-chart {
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+  margin: 1rem auto;
+}
+
+.pie-legend {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 0.8rem;
+  font-size: 0.8rem;
+  font-family: monospace;
+}
+
+.pie-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.pie-swatch {
+  width: 12px;
+  height: 12px;
+  border-radius: 2px;
+  display: inline-block;
+}
+
+/* Action items */
+.action-vidhi {
+  color: var(--green);
+  font-weight: bold;
+}
+
+.action-nishiddha {
+  color: var(--red);
+  font-weight: bold;
+}
+
+.action-arthavada {
+  color: var(--accent);
+  font-weight: bold;
+}
+
+/* Progress bar */
+.progress-track {
+  width: 100%;
+  height: 8px;
+  background: var(--border);
+  border-radius: 4px;
+  overflow: hidden;
+  margin: 0.5rem 0;
+}
+
+.progress-fill {
+  height: 100%;
+  border-radius: 4px;
+}
+
+/* Badge */
+.badge {
+  display: inline-block;
+  padding: 0.2rem 0.6rem;
+  border-radius: 3px;
+  font-size: 0.75rem;
+  font-family: monospace;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: bold;
+}
+
+/* Stats grid */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 1rem;
+  margin: 1rem 0;
+}
+
+.stat-box {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1rem;
+  text-align: center;
+}
+
+.stat-value {
+  font-size: 1.8rem;
+  font-weight: bold;
+  font-family: monospace;
+  line-height: 1.2;
+}
+
+.stat-label {
+  font-size: 0.75rem;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-top: 0.3rem;
+}
+
+/* Darshana card with colored border */
+.darshana-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  border-top: 3px solid var(--accent2);
+}
+
+.darshana-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.darshana-name {
+  font-size: 1.15rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.confidence-badge {
+  font-family: monospace;
+  font-size: 0.8rem;
+  padding: 0.2rem 0.6rem;
+  border-radius: 3px;
+}
+
+footer {
+  margin-top: 3rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border);
+  color: var(--muted);
+  font-size: 0.8rem;
+  text-align: center;
+}
+
+footer a { color: var(--accent); text-decoration: none; }
+
+.om { font-size: 1.5rem; }
+
+</style>
+</head>
+<body>
+<h1><span class="om">&#x1F549;</span> Darshana Analysis -- Rust Rewrite</h1>
+
+<p class="subtitle">Query: "Should we rewrite our backend in Rust?" &mdash; NYAYA engine</p>
+
+<div class="card">
+  <strong style="color: var(--accent);">BUDDHI (Routing Decision)</strong>
+  <div class="routing-bar">
+    <span class="routing-item active">Guna: SATTVA</span><span class="routing-item active">Engine: NYAYA</span><span class="routing-item">Depth: 78/100</span><span class="routing-item">Confidence: 82%</span>
+  </div>
+</div>
+
+<div class="card">
+
+<p>The proposal to rewrite the backend in Rust requires careful logical analysis.</p>
+<p>PRATIJNA (Thesis): Rewriting in Rust will improve performance and reliability.</p>
+<p>HETU (Reason): Rust&#x27;s ownership model prevents entire categories of bugs (null pointers, data races, buffer overflows) that currently cause production incidents. The compiler enforces memory safety at zero runtime cost.</p>
+<p>UDAHARANA (Example): Discord rewrote their Read States service from Go to Rust, reducing tail latencies from 20ms to 1ms. Cloudflare&#x27;s Pingora (Rust) replaced Nginx for their CDN proxy layer. Both are production evidence at scale.</p>
+<p>UPANAYA (Application): Your backend handles 50K RPM with a P99 latency of 200ms. The Python service accounts for 3 production incidents per month due to type errors and race conditions. Rust would eliminate the race conditions structurally and catch type errors at compile time.</p>
+<p>NIGAMANA (Conclusion): The rewrite is justified IF the team has Rust expertise and IF the migration can be done incrementally. A full rewrite carries risk; a strangler-fig pattern (rewrite one service at a time) is the sound approach.</p>
+<p>HETVABHASA CHECK:<br>
+- The claim &#x27;Rust is always faster&#x27; is ANAIKANTIKA (inconclusive) -- Rust is faster for CPU-bound work but your bottleneck may be I/O, where async Python is competitive.<br>
+- The claim &#x27;rewrite will reduce bugs&#x27; is PRAMANA (valid) -- this is structurally true for memory-safety bugs, backed by evidence from Android, Windows, and Chromium projects.<br>
+- The claim &#x27;team can learn Rust quickly&#x27; is VIPARYAYA (misconception) -- Rust&#x27;s learning curve is steep. Budget 3-6 months of reduced velocity.</p>
+
+</div>
+
+<h2><span class="tag">&#x2713;</span> VRITTI SELF-CHECK</h2>
+
+<div class="card">
+  <div style="display: flex; gap: 1.5rem; align-items: center; flex-wrap: wrap;">
+    <div>
+      <span style="color: var(--muted); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px;">Vritti Classification</span><br>
+      <span class="badge" style="background: #22c55e; color: #000; font-size: 0.9rem; margin-top: 0.3rem;">PRAMANA</span>
+    </div>
+    <div>
+      <span style="color: var(--muted); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px;">Pramana</span><br>
+      <span style="font-family: monospace; font-size: 0.95rem;">Inference</span>
+    </div>
+  </div>
+  
+<table style="margin-top: 1rem;">
+  <tr><th>Claim</th><th>Vritti</th><th>Pramana</th></tr>
+  <tr>
+  <td>Rust prevents memory bugs</td>
+  <td style="color: #22c55e; font-family: monospace;">PRAMANA</td>
+  <td style="font-family: monospace;">pratyaksha</td>
+</tr><tr>
+  <td>Discord/Cloudflare evidence</td>
+  <td style="color: #22c55e; font-family: monospace;">PRAMANA</td>
+  <td style="font-family: monospace;">shabda</td>
+</tr><tr>
+  <td>Rewrite justified with caveats</td>
+  <td style="color: #22c55e; font-family: monospace;">PRAMANA</td>
+  <td style="font-family: monospace;">anumana</td>
+</tr><tr>
+  <td>Rust is always faster</td>
+  <td style="color: #ef4444; font-family: monospace;">VIPARYAYA</td>
+  <td style="font-family: monospace;">anumana</td>
+</tr><tr>
+  <td>Team can learn quickly</td>
+  <td style="color: #ef4444; font-family: monospace;">VIPARYAYA</td>
+  <td style="font-family: monospace;">vikalpa</td>
+</tr><tr>
+  <td>Incremental migration will succeed</td>
+  <td style="color: #f59e0b; font-family: monospace;">VIKALPA</td>
+  <td style="font-family: monospace;">anumana</td>
+</tr>
+</table>
+</div>
+
+<h2><span class="tag" style="background: var(--accent2);">&#x26A0;</span> MAYA LAYER &mdash; Representation Gaps</h2>
+<div class="maya-box">
+  <ul style="margin-left: 1.2rem; line-height: 2;">
+    <li>Analysis based on publicly reported case studies, not your specific codebase <span style="color: #f59e0b; font-family: monospace; font-size: 0.8rem;">[medium]</span></li><li>Team skill assessment is a guess -- I haven&#x27;t evaluated your engineers <span style="color: #ef4444; font-family: monospace; font-size: 0.8rem;">[high]</span></li><li>Cost analysis omitted -- rewrite has significant opportunity cost <span style="color: #f59e0b; font-family: monospace; font-size: 0.8rem;">[medium]</span></li>
+  </ul>
+</div>
+
+<h2><span class="tag">TRACE</span> Pipeline Trace</h2>
+<div class="card">
+  <p style="color: var(--muted); font-size: 0.85rem; margin-bottom: 0.8rem;">Total: 4280ms</p>
+  <table>
+    <tr><th></th><th>Step</th><th>Time</th><th>Status</th></tr>
+    <tr>
+  <td style="color: #888; text-align: center; font-family: monospace;">&#x2014;</td>
+  <td>1. Pratyaksha (Perception)</td>
+  <td class="mono">0ms</td>
+  <td style="font-family: monospace; font-size: 0.8rem;">skipped &mdash; <span style="color: var(--muted);">No environment sniffer</span></td>
+</tr><tr>
+  <td style="color: #888; text-align: center; font-family: monospace;">&#x2014;</td>
+  <td>2. Chitta (Memory Recall)</td>
+  <td class="mono">0ms</td>
+  <td style="font-family: monospace; font-size: 0.8rem;">skipped &mdash; <span style="color: var(--muted);">SmritiStore not available</span></td>
+</tr><tr>
+  <td style="color: #22c55e; text-align: center; font-family: monospace;">&#x2713;</td>
+  <td>3. Manas (Context Assembly)</td>
+  <td class="mono">12ms</td>
+  <td style="font-family: monospace; font-size: 0.8rem;">completed &mdash; <span style="color: var(--muted);">System prompt + query assembled</span></td>
+</tr><tr>
+  <td style="color: #22c55e; text-align: center; font-family: monospace;">&#x2713;</td>
+  <td>4. Ahamkara (Strategy)</td>
+  <td class="mono">85ms</td>
+  <td style="font-family: monospace; font-size: 0.8rem;">completed &mdash; <span style="color: var(--muted);">Recommended: nyaya (logic-first)</span></td>
+</tr><tr>
+  <td style="color: #22c55e; text-align: center; font-family: monospace;">&#x2713;</td>
+  <td>5. Buddhi (Routing)</td>
+  <td class="mono">42ms</td>
+  <td style="font-family: monospace; font-size: 0.8rem;">completed &mdash; <span style="color: var(--muted);">Routed to NYAYA, guna=SATTVA</span></td>
+</tr><tr>
+  <td style="color: #22c55e; text-align: center; font-family: monospace;">&#x2713;</td>
+  <td>6. Darshana (Reasoning)</td>
+  <td class="mono">3920ms</td>
+  <td style="font-family: monospace; font-size: 0.8rem;">completed &mdash; <span style="color: var(--muted);">claude-sonnet-4-20250514, 3200 tokens</span></td>
+</tr><tr>
+  <td style="color: #22c55e; text-align: center; font-family: monospace;">&#x2713;</td>
+  <td>7. Vritti (Classification)</td>
+  <td class="mono">180ms</td>
+  <td style="font-family: monospace; font-size: 0.8rem;">completed &mdash; <span style="color: var(--muted);">PRAMANA (confidence: 0.82)</span></td>
+</tr><tr>
+  <td style="color: #22c55e; text-align: center; font-family: monospace;">&#x2713;</td>
+  <td>8. Maya (Gap Detection)</td>
+  <td class="mono">35ms</td>
+  <td style="font-family: monospace; font-size: 0.8rem;">completed &mdash; <span style="color: var(--muted);">3 gaps detected</span></td>
+</tr><tr>
+  <td style="color: #22c55e; text-align: center; font-family: monospace;">&#x2713;</td>
+  <td>9. Karma (Learning)</td>
+  <td class="mono">6ms</td>
+  <td style="font-family: monospace; font-size: 0.8rem;">completed &mdash; <span style="color: var(--muted);">Stored attempt result</span></td>
+</tr>
+  </table>
+</div>
+
+<div style="display: flex; gap: 0.6rem; flex-wrap: wrap; margin: 1rem 0;">
+  <span class="routing-item">Cost: $0.03</span><span class="routing-item">claude-sonnet-4-20250514</span><span class="routing-item">1,840 in / 3,200 out tokens</span><span class="routing-item">4280ms</span>
+</div>
+<footer>
+  <p><span class="om">&#x1F549;</span> Generated by the <a href="https://github.com/aidgoc/om">Darshana Architecture</a></p>
+  <p style="margin-top: 0.3rem;">2026-03-21 22:03:23</p>
+  <p style="margin-top: 0.5rem;">By Harshwardhan (HNG) &mdash; MIT License</p>
+  <p style="margin-top: 1rem; font-style: italic; color: var(--accent);">
+    &#x090F;&#x0915;&#x0902; &#x0938;&#x0926;&#x094D; &#x0935;&#x093F;&#x092A;&#x094D;&#x0930;&#x093E; &#x092C;&#x0939;&#x0941;&#x0927;&#x093E; &#x0935;&#x0926;&#x0928;&#x094D;&#x0924;&#x093F;<br>
+    &ldquo;Truth is one. The wise call it by many names.&rdquo;<br>
+    <span style="color: var(--muted);">&mdash; Rig Veda 1.164.46</span>
+  </p>
+</footer>
+</body>
+</html>

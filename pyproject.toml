@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "darshana"
-version = "0.1.0"
+version = "0.2.0"
 description = "The Darshana Architecture — Hindu philosophical reasoning framework for AI"
 readme = "README.md"
 license = "MIT"
@@ -19,6 +19,9 @@ keywords = [
     "darshana",
     "hindu-philosophy",
     "cognitive-architecture",
+    "llm",
+    "epistemology",
+    "prompt-engineering",
 ]
 classifiers = [
     "Development Status :: 3 - Alpha",
@@ -30,7 +33,9 @@ classifiers = [
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
     "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Topic :: Software Development :: Libraries :: Python Modules",
 ]
 dependencies = [
     "anthropic>=0.40.0",
@@ -38,7 +43,11 @@ dependencies = [
 
 [project.optional-dependencies]
 dev = [
-    "pytest",
+    "pytest>=7.0",
+    "pytest-timeout>=2.0",
+]
+all = [
+    "anthropic>=0.40.0",
 ]
 
 [project.scripts]
@@ -46,6 +55,13 @@ darshana = "src.__main__:main"
 
 [project.urls]
 Homepage = "https://github.com/aidgoc/om"
+Repository = "https://github.com/aidgoc/om"
+Documentation = "https://github.com/aidgoc/om#readme"
+Issues = "https://github.com/aidgoc/om/issues"
 
 [tool.setuptools.packages.find]
 include = ["src*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]

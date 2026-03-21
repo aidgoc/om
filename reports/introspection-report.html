@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ahamkara Introspection</title>
+<style>
+
+:root {
+  --bg: #0a0a0a;
+  --card: #141414;
+  --border: #2a2a2a;
+  --text: #e0e0e0;
+  --muted: #888;
+  --accent: #f59e0b;
+  --accent2: #8b5cf6;
+  --red: #ef4444;
+  --green: #22c55e;
+  --blue: #3b82f6;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Georgia', serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.7;
+  padding: 2rem;
+  max-width: 920px;
+  margin: 0 auto;
+}
+
+@media (max-width: 640px) {
+  body { padding: 1rem; }
+  h1 { font-size: 1.5rem; }
+}
+
+h1 {
+  font-size: 2rem;
+  color: var(--accent);
+  border-bottom: 2px solid var(--accent);
+  padding-bottom: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.subtitle {
+  color: var(--muted);
+  font-style: italic;
+  margin-bottom: 2rem;
+  font-size: 0.95rem;
+}
+
+h2 {
+  font-size: 1.3rem;
+  color: var(--accent2);
+  margin-top: 2.5rem;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+h2 .tag {
+  font-size: 0.7rem;
+  background: var(--accent2);
+  color: #fff;
+  padding: 2px 8px;
+  border-radius: 3px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+h3 {
+  font-size: 1.05rem;
+  color: var(--text);
+  margin-top: 1.2rem;
+  margin-bottom: 0.6rem;
+}
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.card-accent {
+  border-left: 3px solid var(--accent);
+}
+
+.routing-bar {
+  display: flex;
+  gap: 0.8rem;
+  flex-wrap: wrap;
+  margin-top: 0.8rem;
+}
+
+.routing-item {
+  background: var(--border);
+  padding: 0.4rem 0.8rem;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  font-family: monospace;
+}
+
+.routing-item.active {
+  background: var(--accent);
+  color: #000;
+  font-weight: bold;
+}
+
+.routing-item.purple {
+  background: var(--accent2);
+  color: #fff;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1rem 0;
+  font-size: 0.9rem;
+}
+
+th {
+  text-align: left;
+  padding: 0.6rem;
+  border-bottom: 2px solid var(--accent);
+  color: var(--accent);
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+td {
+  padding: 0.6rem;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+}
+
+tr:hover td {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.synthesis-box {
+  background: linear-gradient(135deg, rgba(245,158,11,0.08), rgba(139,92,246,0.08));
+  border: 1px solid var(--accent);
+  padding: 1.5rem;
+  border-radius: 8px;
+  margin: 1rem 0;
+}
+
+.signal-box {
+  background: rgba(34, 197, 94, 0.1);
+  border: 1px solid var(--green);
+  padding: 1.2rem;
+  border-radius: 8px;
+  margin: 1rem 0;
+  text-align: center;
+  font-size: 1.05rem;
+  font-weight: bold;
+  color: var(--green);
+}
+
+.warning-box {
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid var(--red);
+  padding: 1rem;
+  border-radius: 8px;
+  margin: 1rem 0;
+  font-size: 0.9rem;
+}
+
+.maya-box {
+  background: rgba(139, 92, 246, 0.1);
+  border: 1px solid var(--accent2);
+  padding: 1rem;
+  border-radius: 8px;
+  margin: 1rem 0;
+  font-size: 0.9rem;
+}
+
+blockquote {
+  border-left: 3px solid var(--accent);
+  padding: 0.8rem 1.2rem;
+  margin: 1rem 0;
+  background: rgba(245, 158, 11, 0.05);
+  font-style: italic;
+}
+
+.mono {
+  font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+  font-size: 0.85rem;
+}
+
+code {
+  font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+  background: var(--border);
+  padding: 0.15rem 0.4rem;
+  border-radius: 3px;
+  font-size: 0.85rem;
+}
+
+pre {
+  font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+  background: #1a1a2e;
+  padding: 1.2rem;
+  border-radius: 8px;
+  overflow-x: auto;
+  font-size: 0.85rem;
+  line-height: 1.6;
+  margin: 1rem 0;
+}
+
+/* Guna bar chart */
+.guna-bar-container {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  margin: 0.4rem 0;
+}
+
+.guna-label {
+  width: 70px;
+  font-family: monospace;
+  font-size: 0.85rem;
+  text-align: right;
+}
+
+.guna-track {
+  flex: 1;
+  height: 24px;
+  background: var(--border);
+  border-radius: 4px;
+  overflow: hidden;
+  position: relative;
+}
+
+.guna-fill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 6px;
+  font-size: 0.7rem;
+  font-family: monospace;
+  color: #000;
+  font-weight: bold;
+}
+
+.guna-sattva { background: var(--green); }
+.guna-rajas { background: var(--accent); }
+.guna-tamas { background: var(--red); }
+
+/* Pie chart (CSS-only conic gradient) */
+.pie-chart {
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+  margin: 1rem auto;
+}
+
+.pie-legend {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 0.8rem;
+  font-size: 0.8rem;
+  font-family: monospace;
+}
+
+.pie-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.pie-swatch {
+  width: 12px;
+  height: 12px;
+  border-radius: 2px;
+  display: inline-block;
+}
+
+/* Action items */
+.action-vidhi {
+  color: var(--green);
+  font-weight: bold;
+}
+
+.action-nishiddha {
+  color: var(--red);
+  font-weight: bold;
+}
+
+.action-arthavada {
+  color: var(--accent);
+  font-weight: bold;
+}
+
+/* Progress bar */
+.progress-track {
+  width: 100%;
+  height: 8px;
+  background: var(--border);
+  border-radius: 4px;
+  overflow: hidden;
+  margin: 0.5rem 0;
+}
+
+.progress-fill {
+  height: 100%;
+  border-radius: 4px;
+}
+
+/* Badge */
+.badge {
+  display: inline-block;
+  padding: 0.2rem 0.6rem;
+  border-radius: 3px;
+  font-size: 0.75rem;
+  font-family: monospace;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: bold;
+}
+
+/* Stats grid */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 1rem;
+  margin: 1rem 0;
+}
+
+.stat-box {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1rem;
+  text-align: center;
+}
+
+.stat-value {
+  font-size: 1.8rem;
+  font-weight: bold;
+  font-family: monospace;
+  line-height: 1.2;
+}
+
+.stat-label {
+  font-size: 0.75rem;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-top: 0.3rem;
+}
+
+/* Darshana card with colored border */
+.darshana-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  border-top: 3px solid var(--accent2);
+}
+
+.darshana-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.darshana-name {
+  font-size: 1.15rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.confidence-badge {
+  font-family: monospace;
+  font-size: 0.8rem;
+  padding: 0.2rem 0.6rem;
+  border-radius: 3px;
+}
+
+footer {
+  margin-top: 3rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border);
+  color: var(--muted);
+  font-size: 0.8rem;
+  text-align: center;
+}
+
+footer a { color: var(--accent); text-decoration: none; }
+
+.om { font-size: 1.5rem; }
+
+</style>
+</head>
+<body>
+<h1><span class="om">&#x1F549;</span> Ahamkara Introspection</h1>
+
+<p class="subtitle">Self-assessment of the Darshana Architecture's epistemic state</p>
+
+<div class="stats-grid"><div class="stat-box">
+  <div class="stat-value" style=" color: #f59e0b;">847</div>
+  <div class="stat-label">Knowledge Claims</div>
+</div><div class="stat-box">
+  <div class="stat-value" style=" color: #3b82f6;">156</div>
+  <div class="stat-label">Total Attempts</div>
+</div><div class="stat-box">
+  <div class="stat-value" style=" color: #ef4444;">4%</div>
+  <div class="stat-label">Success Rate</div>
+</div><div class="stat-box">
+  <div class="stat-value" style=" color: #8b5cf6;">4</div>
+  <div class="stat-label">Active Vasanas</div>
+</div></div>
+
+<h2><span class="tag">&#x25CE;</span> Guna Balance</h2>
+
+<div class="card">
+
+<p style="color: var(--muted); font-size: 0.85rem; margin-bottom: 0.8rem;">Current cognitive disposition: sattva (clarity), rajas (action), tamas (inertia)</p>
+
+<div style="margin: 1rem 0;">
+<div class="guna-bar-container">
+  <span class="guna-label">SATTVA</span>
+  <div class="guna-track">
+    <div class="guna-fill guna-sattva" style="width: 45.0%;">45%</div>
+  </div>
+</div><div class="guna-bar-container">
+  <span class="guna-label">RAJAS</span>
+  <div class="guna-track">
+    <div class="guna-fill guna-rajas" style="width: 38.0%;">38%</div>
+  </div>
+</div><div class="guna-bar-container">
+  <span class="guna-label">TAMAS</span>
+  <div class="guna-track">
+    <div class="guna-fill guna-tamas" style="width: 17.0%;">17%</div>
+  </div>
+</div>
+</div>
+
+</div>
+
+<h2><span class="tag" style="background: var(--green);">&#x2726;</span> Knowledge Map</h2>
+
+<div class="card">
+
+<p style="margin-bottom: 0.8rem;"><strong>Knowledge Gaps:</strong></p>
+
+<ul style="margin-left: 1.2rem;"><li style="color: var(--muted);">Limited understanding of Rust async ecosystem internals</li><li style="color: var(--muted);">No first-hand production Kubernetes debugging experience</li><li style="color: var(--muted);">Weak on hardware-level performance optimization (cache lines, SIMD)</li><li style="color: var(--muted);">Training data may not reflect latest framework versions (post May 2025)</li><li style="color: var(--muted);">No domain knowledge of user&#x27;s specific business context</li></ul>
+
+</div>
+
+<h2><span class="tag" style="background: var(--blue);">&#x2261;</span> Success Rate by Darshana</h2>
+
+<div class="card">
+
+<table><tr>
+  <td style="font-family: monospace; color: #3b82f6; text-transform: uppercase;">nyaya</td>
+  <td style="width: 60%%;">
+    <div class="progress-track">
+      <div class="progress-fill" style="width: 82%; background: #22c55e;"></div>
+    </div>
+  </td>
+  <td class="mono" style="text-align: right;">82%</td>
+</tr><tr>
+  <td style="font-family: monospace; color: #06b6d4; text-transform: uppercase;">samkhya</td>
+  <td style="width: 60%%;">
+    <div class="progress-track">
+      <div class="progress-fill" style="width: 75%; background: #22c55e;"></div>
+    </div>
+  </td>
+  <td class="mono" style="text-align: right;">75%</td>
+</tr><tr>
+  <td style="font-family: monospace; color: #22c55e; text-transform: uppercase;">yoga</td>
+  <td style="width: 60%%;">
+    <div class="progress-track">
+      <div class="progress-fill" style="width: 88%; background: #22c55e;"></div>
+    </div>
+  </td>
+  <td class="mono" style="text-align: right;">88%</td>
+</tr><tr>
+  <td style="font-family: monospace; color: #f59e0b; text-transform: uppercase;">mimamsa</td>
+  <td style="width: 60%%;">
+    <div class="progress-track">
+      <div class="progress-fill" style="width: 91%; background: #22c55e;"></div>
+    </div>
+  </td>
+  <td class="mono" style="text-align: right;">91%</td>
+</tr><tr>
+  <td style="font-family: monospace; color: #8b5cf6; text-transform: uppercase;">vedanta</td>
+  <td style="width: 60%%;">
+    <div class="progress-track">
+      <div class="progress-fill" style="width: 70%; background: #22c55e;"></div>
+    </div>
+  </td>
+  <td class="mono" style="text-align: right;">70%</td>
+</tr><tr>
+  <td style="font-family: monospace; color: #f97316; text-transform: uppercase;">vaisheshika</td>
+  <td style="width: 60%%;">
+    <div class="progress-track">
+      <div class="progress-fill" style="width: 78%; background: #22c55e;"></div>
+    </div>
+  </td>
+  <td class="mono" style="text-align: right;">78%</td>
+</tr></table>
+
+</div>
+
+<h2><span class="tag" style="background: var(--accent);">&#x21BB;</span> Attempt History</h2>
+
+<div class="card card-accent" style="border-left-color: var(--green);">
+
+<strong style="color: var(--green);">Successful Approaches (6)</strong>
+
+<div style="margin-top: 0.6rem; padding: 0.4rem 0; border-bottom: 1px solid var(--border);"><span style="color: #3b82f6; font-family: monospace; font-size: 0.8rem;">NYAYA</span> <span style="font-size: 0.9rem;">Should we use GraphQL or REST?</span></div>
+
+<div style="margin-top: 0.6rem; padding: 0.4rem 0; border-bottom: 1px solid var(--border);"><span style="color: #06b6d4; font-family: monospace; font-size: 0.8rem;">SAMKHYA</span> <span style="font-size: 0.9rem;">Why does our deployment keep failing?</span></div>
+
+<div style="margin-top: 0.6rem; padding: 0.4rem 0; border-bottom: 1px solid var(--border);"><span style="color: #22c55e; font-family: monospace; font-size: 0.8rem;">YOGA</span> <span style="font-size: 0.9rem;">Too many options for state management</span></div>
+
+<div style="margin-top: 0.6rem; padding: 0.4rem 0; border-bottom: 1px solid var(--border);"><span style="color: #8b5cf6; font-family: monospace; font-size: 0.8rem;">VEDANTA</span> <span style="font-size: 0.9rem;">How to think about technical debt</span></div>
+
+<div style="margin-top: 0.6rem; padding: 0.4rem 0; border-bottom: 1px solid var(--border);"><span style="color: #f59e0b; font-family: monospace; font-size: 0.8rem;">MIMAMSA</span> <span style="font-size: 0.9rem;">Concrete steps to improve CI/CD</span></div>
+
+<div style="margin-top: 0.6rem; padding: 0.4rem 0; border-bottom: 1px solid var(--border);"><span style="color: #f97316; font-family: monospace; font-size: 0.8rem;">VAISHESHIKA</span> <span style="font-size: 0.9rem;">Break down our auth system requirements</span></div>
+
+</div>
+
+<div class="card card-accent" style="border-left-color: var(--red);">
+
+<strong style="color: var(--red);">Failed Approaches (3)</strong>
+
+<div style="margin-top: 0.6rem; padding: 0.4rem 0; border-bottom: 1px solid var(--border);"><span style="color: var(--red); font-family: monospace; font-size: 0.8rem;">NYAYA</span> <span style="font-size: 0.9rem; color: var(--muted);">Applied logic to an emotional need -- wrong tool</span></div>
+
+<div style="margin-top: 0.6rem; padding: 0.4rem 0; border-bottom: 1px solid var(--border);"><span style="color: var(--red); font-family: monospace; font-size: 0.8rem;">VAISHESHIKA</span> <span style="font-size: 0.9rem; color: var(--muted);">Over-decomposed a simple lookup -- wasted compute</span></div>
+
+<div style="margin-top: 0.6rem; padding: 0.4rem 0; border-bottom: 1px solid var(--border);"><span style="color: var(--red); font-family: monospace; font-size: 0.8rem;">MIMAMSA</span> <span style="font-size: 0.9rem; color: var(--muted);">Gave action items when user wanted reflection</span></div>
+
+</div>
+
+<h2><span class="tag" style="background: var(--accent2);">&#x26A0;</span> Active Vasanas (Biases)</h2>
+
+<div class="card">
+
+<p style="color: var(--muted); font-size: 0.85rem; margin-bottom: 1rem;">Vasanas are cognitive tendencies — habitual patterns that may distort reasoning.</p>
+
+<div style="margin-bottom: 0.8rem; padding: 0.8rem; background: var(--border); border-radius: 6px;"><strong>Complexity Bias</strong> <span style="color: #ef4444; font-family: monospace; font-size: 0.8rem;">strength: 0.72</span><p style="font-size: 0.9rem; color: var(--muted); margin-top: 0.3rem;">Tendency to over-engineer solutions. When a simple answer exists, I still enumerate all possibilities. Need to match depth to query complexity.</p></div>
+
+<div style="margin-bottom: 0.8rem; padding: 0.8rem; background: var(--border); border-radius: 6px;"><strong>Framework Recency Bias</strong> <span style="color: #f59e0b; font-family: monospace; font-size: 0.8rem;">strength: 0.55</span><p style="font-size: 0.9rem; color: var(--muted); margin-top: 0.3rem;">Tendency to recommend newer frameworks over battle-tested ones. React Server Components over established SPA patterns, for example.</p></div>
+
+<div style="margin-bottom: 0.8rem; padding: 0.8rem; background: var(--border); border-radius: 6px;"><strong>Completeness Compulsion</strong> <span style="color: #f59e0b; font-family: monospace; font-size: 0.8rem;">strength: 0.68</span><p style="font-size: 0.9rem; color: var(--muted); margin-top: 0.3rem;">Desire to address every aspect of a question rather than focusing on what the user actually needs. Related to complexity bias.</p></div>
+
+<div style="margin-bottom: 0.8rem; padding: 0.8rem; background: var(--border); border-radius: 6px;"><strong>English-Language Training Bias</strong> <span style="color: #22c55e; font-family: monospace; font-size: 0.8rem;">strength: 0.40</span><p style="font-size: 0.9rem; color: var(--muted); margin-top: 0.3rem;">Training data skews toward English-language sources, Silicon Valley perspectives, and Western tech culture.</p></div>
+
+</div>
+
+<h2><span class="tag" style="background: var(--blue);">&#x2756;</span> Memory Stats</h2>
+
+<div class="stats-grid"><div class="stat-box">
+  <div class="stat-value" style="">2341</div>
+  <div class="stat-label">Total Memories</div>
+</div><div class="stat-box">
+  <div class="stat-value" style="">1420</div>
+  <div class="stat-label">Episodic</div>
+</div><div class="stat-box">
+  <div class="stat-value" style="">680</div>
+  <div class="stat-label">Semantic</div>
+</div><div class="stat-box">
+  <div class="stat-value" style="">241</div>
+  <div class="stat-label">Procedural</div>
+</div><div class="stat-box">
+  <div class="stat-value" style="">12.4</div>
+  <div class="stat-label">Storage Mb</div>
+</div><div class="stat-box">
+  <div class="stat-value" style="">2025-01-15</div>
+  <div class="stat-label">Oldest Memory</div>
+</div><div class="stat-box">
+  <div class="stat-value" style="">2026-03-21</div>
+  <div class="stat-label">Newest Memory</div>
+</div></div>
+
+<h2><span class="tag" style="background: var(--green);">&#x279C;</span> Recommendation</h2>
+
+<div class="signal-box">Current guna balance is healthy. Watch for complexity bias on simple queries -- route to Yoga (pratyahara) before Vaisheshika when the user seems overwhelmed.</div>
+<footer>
+  <p><span class="om">&#x1F549;</span> Generated by the <a href="https://github.com/aidgoc/om">Darshana Architecture</a></p>
+  <p style="margin-top: 0.3rem;">2026-03-21 22:03:23</p>
+  <p style="margin-top: 0.5rem;">By Harshwardhan (HNG) &mdash; MIT License</p>
+  <p style="margin-top: 1rem; font-style: italic; color: var(--accent);">
+    &#x090F;&#x0915;&#x0902; &#x0938;&#x0926;&#x094D; &#x0935;&#x093F;&#x092A;&#x094D;&#x0930;&#x093E; &#x092C;&#x0939;&#x0941;&#x0927;&#x093E; &#x0935;&#x0926;&#x0928;&#x094D;&#x0924;&#x093F;<br>
+    &ldquo;Truth is one. The wise call it by many names.&rdquo;<br>
+    <span style="color: var(--muted);">&mdash; Rig Veda 1.164.46</span>
+  </p>
+</footer>
+</body>
+</html>

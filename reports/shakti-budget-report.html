@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shakti Energy Report -- March 2026</title>
+<style>
+
+:root {
+  --bg: #0a0a0a;
+  --card: #141414;
+  --border: #2a2a2a;
+  --text: #e0e0e0;
+  --muted: #888;
+  --accent: #f59e0b;
+  --accent2: #8b5cf6;
+  --red: #ef4444;
+  --green: #22c55e;
+  --blue: #3b82f6;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Georgia', serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.7;
+  padding: 2rem;
+  max-width: 920px;
+  margin: 0 auto;
+}
+
+@media (max-width: 640px) {
+  body { padding: 1rem; }
+  h1 { font-size: 1.5rem; }
+}
+
+h1 {
+  font-size: 2rem;
+  color: var(--accent);
+  border-bottom: 2px solid var(--accent);
+  padding-bottom: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.subtitle {
+  color: var(--muted);
+  font-style: italic;
+  margin-bottom: 2rem;
+  font-size: 0.95rem;
+}
+
+h2 {
+  font-size: 1.3rem;
+  color: var(--accent2);
+  margin-top: 2.5rem;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+h2 .tag {
+  font-size: 0.7rem;
+  background: var(--accent2);
+  color: #fff;
+  padding: 2px 8px;
+  border-radius: 3px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+h3 {
+  font-size: 1.05rem;
+  color: var(--text);
+  margin-top: 1.2rem;
+  margin-bottom: 0.6rem;
+}
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.card-accent {
+  border-left: 3px solid var(--accent);
+}
+
+.routing-bar {
+  display: flex;
+  gap: 0.8rem;
+  flex-wrap: wrap;
+  margin-top: 0.8rem;
+}
+
+.routing-item {
+  background: var(--border);
+  padding: 0.4rem 0.8rem;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  font-family: monospace;
+}
+
+.routing-item.active {
+  background: var(--accent);
+  color: #000;
+  font-weight: bold;
+}
+
+.routing-item.purple {
+  background: var(--accent2);
+  color: #fff;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1rem 0;
+  font-size: 0.9rem;
+}
+
+th {
+  text-align: left;
+  padding: 0.6rem;
+  border-bottom: 2px solid var(--accent);
+  color: var(--accent);
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+td {
+  padding: 0.6rem;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+}
+
+tr:hover td {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.synthesis-box {
+  background: linear-gradient(135deg, rgba(245,158,11,0.08), rgba(139,92,246,0.08));
+  border: 1px solid var(--accent);
+  padding: 1.5rem;
+  border-radius: 8px;
+  margin: 1rem 0;
+}
+
+.signal-box {
+  background: rgba(34, 197, 94, 0.1);
+  border: 1px solid var(--green);
+  padding: 1.2rem;
+  border-radius: 8px;
+  margin: 1rem 0;
+  text-align: center;
+  font-size: 1.05rem;
+  font-weight: bold;
+  color: var(--green);
+}
+
+.warning-box {
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid var(--red);
+  padding: 1rem;
+  border-radius: 8px;
+  margin: 1rem 0;
+  font-size: 0.9rem;
+}
+
+.maya-box {
+  background: rgba(139, 92, 246, 0.1);
+  border: 1px solid var(--accent2);
+  padding: 1rem;
+  border-radius: 8px;
+  margin: 1rem 0;
+  font-size: 0.9rem;
+}
+
+blockquote {
+  border-left: 3px solid var(--accent);
+  padding: 0.8rem 1.2rem;
+  margin: 1rem 0;
+  background: rgba(245, 158, 11, 0.05);
+  font-style: italic;
+}
+
+.mono {
+  font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+  font-size: 0.85rem;
+}
+
+code {
+  font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+  background: var(--border);
+  padding: 0.15rem 0.4rem;
+  border-radius: 3px;
+  font-size: 0.85rem;
+}
+
+pre {
+  font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+  background: #1a1a2e;
+  padding: 1.2rem;
+  border-radius: 8px;
+  overflow-x: auto;
+  font-size: 0.85rem;
+  line-height: 1.6;
+  margin: 1rem 0;
+}
+
+/* Guna bar chart */
+.guna-bar-container {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  margin: 0.4rem 0;
+}
+
+.guna-label {
+  width: 70px;
+  font-family: monospace;
+  font-size: 0.85rem;
+  text-align: right;
+}
+
+.guna-track {
+  flex: 1;
+  height: 24px;
+  background: var(--border);
+  border-radius: 4px;
+  overflow: hidden;
+  position: relative;
+}
+
+.guna-fill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 6px;
+  font-size: 0.7rem;
+  font-family: monospace;
+  color: #000;
+  font-weight: bold;
+}
+
+.guna-sattva { background: var(--green); }
+.guna-rajas { background: var(--accent); }
+.guna-tamas { background: var(--red); }
+
+/* Pie chart (CSS-only conic gradient) */
+.pie-chart {
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+  margin: 1rem auto;
+}
+
+.pie-legend {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 0.8rem;
+  font-size: 0.8rem;
+  font-family: monospace;
+}
+
+.pie-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.pie-swatch {
+  width: 12px;
+  height: 12px;
+  border-radius: 2px;
+  display: inline-block;
+}
+
+/* Action items */
+.action-vidhi {
+  color: var(--green);
+  font-weight: bold;
+}
+
+.action-nishiddha {
+  color: var(--red);
+  font-weight: bold;
+}
+
+.action-arthavada {
+  color: var(--accent);
+  font-weight: bold;
+}
+
+/* Progress bar */
+.progress-track {
+  width: 100%;
+  height: 8px;
+  background: var(--border);
+  border-radius: 4px;
+  overflow: hidden;
+  margin: 0.5rem 0;
+}
+
+.progress-fill {
+  height: 100%;
+  border-radius: 4px;
+}
+
+/* Badge */
+.badge {
+  display: inline-block;
+  padding: 0.2rem 0.6rem;
+  border-radius: 3px;
+  font-size: 0.75rem;
+  font-family: monospace;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: bold;
+}
+
+/* Stats grid */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 1rem;
+  margin: 1rem 0;
+}
+
+.stat-box {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1rem;
+  text-align: center;
+}
+
+.stat-value {
+  font-size: 1.8rem;
+  font-weight: bold;
+  font-family: monospace;
+  line-height: 1.2;
+}
+
+.stat-label {
+  font-size: 0.75rem;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-top: 0.3rem;
+}
+
+/* Darshana card with colored border */
+.darshana-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  border-top: 3px solid var(--accent2);
+}
+
+.darshana-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.darshana-name {
+  font-size: 1.15rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.confidence-badge {
+  font-family: monospace;
+  font-size: 0.8rem;
+  padding: 0.2rem 0.6rem;
+  border-radius: 3px;
+}
+
+footer {
+  margin-top: 3rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border);
+  color: var(--muted);
+  font-size: 0.8rem;
+  text-align: center;
+}
+
+footer a { color: var(--accent); text-decoration: none; }
+
+.om { font-size: 1.5rem; }
+
+</style>
+</head>
+<body>
+<h1><span class="om">&#x1F549;</span> Shakti Energy Report -- March 2026</h1>
+
+<p class="subtitle">Compute budget and energy allocation report</p>
+
+<div class="stats-grid"><div class="stat-box">
+  <div class="stat-value" style=" color: #f59e0b;">$2.84</div>
+  <div class="stat-label">Today</div>
+</div><div class="stat-box">
+  <div class="stat-value" style=" color: #3b82f6;">$14.20</div>
+  <div class="stat-label">This Week</div>
+</div><div class="stat-box">
+  <div class="stat-value" style=" color: #8b5cf6;">$52.30</div>
+  <div class="stat-label">This Month</div>
+</div><div class="stat-box">
+  <div class="stat-value" style=" color: #22c55e;">73</div>
+  <div class="stat-label">Efficiency</div>
+</div></div>
+
+<h2><span class="tag" style="background: var(--accent);">$</span> Budget Status</h2>
+
+<div class="card">
+
+<div style="margin-bottom: 1rem;"><div style="display: flex; justify-content: space-between; font-family: monospace; font-size: 0.85rem;"><span>Daily: $2.84 / $5.00</span><span style="color: var(--muted);">$2.16 remaining</span></div><div class="progress-track"><div class="progress-fill" style="width: 57%; background: #22c55e;"></div></div></div>
+
+<div><div style="display: flex; justify-content: space-between; font-family: monospace; font-size: 0.85rem;"><span>Monthly: $52.30 / $100.00</span><span style="color: var(--muted);">$47.70 remaining</span></div><div class="progress-track"><div class="progress-fill" style="width: 52%; background: #22c55e;"></div></div></div>
+
+</div>
+
+<h2><span class="tag" style="background: var(--blue);">&#x25CE;</span> Spend by Model Tier</h2>
+
+<div class="card">
+
+<div style="text-align: center;">
+  <div class="pie-chart" style="background: conic-gradient(#22c55e 0.0deg 57.8deg, #3b82f6 57.8deg 272.6deg, #8b5cf6 272.6deg 360.0deg);"></div>
+  <div class="pie-legend">
+    <span class="pie-legend-item"><span class="pie-swatch" style="background: #22c55e;"></span>haiku: $8.40 (16%)</span><span class="pie-legend-item"><span class="pie-swatch" style="background: #3b82f6;"></span>sonnet: $31.20 (60%)</span><span class="pie-legend-item"><span class="pie-swatch" style="background: #8b5cf6;"></span>opus: $12.70 (24%)</span>
+  </div>
+</div>
+
+<table style="margin-top: 1.5rem;"><tr><th>Tier</th><th>Cost</th><th>Share</th></tr><tr>
+  <td style="color: #3b82f6; font-family: monospace; text-transform: uppercase;">sonnet</td>
+  <td class="mono">$31.20</td>
+  <td class="mono">59.7%</td>
+</tr><tr>
+  <td style="color: #8b5cf6; font-family: monospace; text-transform: uppercase;">opus</td>
+  <td class="mono">$12.70</td>
+  <td class="mono">24.3%</td>
+</tr><tr>
+  <td style="color: #22c55e; font-family: monospace; text-transform: uppercase;">haiku</td>
+  <td class="mono">$8.40</td>
+  <td class="mono">16.1%</td>
+</tr></table>
+
+</div>
+
+<h2><span class="tag" style="background: var(--accent2);">&#x2726;</span> Spend by Darshana</h2>
+
+<div class="card">
+
+<table><tr><th>Darshana</th><th>Cost</th><th>Share</th><th></th></tr><tr>
+  <td style="color: #3b82f6; font-family: monospace; text-transform: uppercase;">nyaya</td>
+  <td class="mono">$14.80</td>
+  <td class="mono">28.3%</td>
+  <td style="width: 40%%;">
+    <div class="progress-track">
+      <div class="progress-fill" style="width: 28%; background: #3b82f6;"></div>
+    </div>
+  </td>
+</tr><tr>
+  <td style="color: #8b5cf6; font-family: monospace; text-transform: uppercase;">vedanta</td>
+  <td class="mono">$12.30</td>
+  <td class="mono">23.5%</td>
+  <td style="width: 40%%;">
+    <div class="progress-track">
+      <div class="progress-fill" style="width: 24%; background: #8b5cf6;"></div>
+    </div>
+  </td>
+</tr><tr>
+  <td style="color: #06b6d4; font-family: monospace; text-transform: uppercase;">samkhya</td>
+  <td class="mono">$8.20</td>
+  <td class="mono">15.7%</td>
+  <td style="width: 40%%;">
+    <div class="progress-track">
+      <div class="progress-fill" style="width: 16%; background: #06b6d4;"></div>
+    </div>
+  </td>
+</tr><tr>
+  <td style="color: #22c55e; font-family: monospace; text-transform: uppercase;">yoga</td>
+  <td class="mono">$6.10</td>
+  <td class="mono">11.7%</td>
+  <td style="width: 40%%;">
+    <div class="progress-track">
+      <div class="progress-fill" style="width: 12%; background: #22c55e;"></div>
+    </div>
+  </td>
+</tr><tr>
+  <td style="color: #f97316; font-family: monospace; text-transform: uppercase;">vaisheshika</td>
+  <td class="mono">$5.50</td>
+  <td class="mono">10.5%</td>
+  <td style="width: 40%%;">
+    <div class="progress-track">
+      <div class="progress-fill" style="width: 11%; background: #f97316;"></div>
+    </div>
+  </td>
+</tr><tr>
+  <td style="color: #f59e0b; font-family: monospace; text-transform: uppercase;">mimamsa</td>
+  <td class="mono">$5.40</td>
+  <td class="mono">10.3%</td>
+  <td style="width: 40%%;">
+    <div class="progress-track">
+      <div class="progress-fill" style="width: 10%; background: #f59e0b;"></div>
+    </div>
+  </td>
+</tr></table>
+
+</div>
+
+<h2><span class="tag" style="background: var(--green);">&#x21BB;</span> Cache Efficiency</h2>
+
+<div class="card">
+
+<div class="stats-grid"><div class="stat-box">
+  <div class="stat-value" style=" color: #ef4444;">28%</div>
+  <div class="stat-label">Hit Rate</div>
+</div><div class="stat-box">
+  <div class="stat-value" style="">342</div>
+  <div class="stat-label">Hits</div>
+</div><div class="stat-box">
+  <div class="stat-value" style="">898</div>
+  <div class="stat-label">Misses</div>
+</div><div class="stat-box">
+  <div class="stat-value" style=" color: #22c55e;">$8.45</div>
+  <div class="stat-label">Cost Saved</div>
+</div></div>
+
+</div>
+
+<h2><span class="tag" style="background: var(--accent);">&#x2605;</span> Optimization Suggestions</h2>
+
+<div class="card">
+
+<div style="padding: 0.6rem 0; border-bottom: 1px solid var(--border); font-size: 0.9rem;"><span style="color: var(--accent);">&#x279C;</span> Route more queries to Haiku tier -- 62% of your Sonnet queries have depth_score &lt; 40, suggesting they could be handled by Haiku</div>
+
+<div style="padding: 0.6rem 0; border-bottom: 1px solid var(--border); font-size: 0.9rem;"><span style="color: var(--accent);">&#x279C;</span> Enable caching for repeated query patterns -- 28% of queries this week were near-duplicates</div>
+
+<div style="padding: 0.6rem 0; border-bottom: 1px solid var(--border); font-size: 0.9rem;"><span style="color: var(--accent);">&#x279C;</span> Consider tamas (cached/fast) mode for follow-up questions on the same topic</div>
+
+<div style="padding: 0.6rem 0; border-bottom: 1px solid var(--border); font-size: 0.9rem;"><span style="color: var(--accent);">&#x279C;</span> Vedanta synthesis calls are expensive -- use them only for genuine multi-darshana queries, not single-engine responses</div>
+
+<div style="padding: 0.6rem 0; border-bottom: 1px solid var(--border); font-size: 0.9rem;"><span style="color: var(--accent);">&#x279C;</span> Your Opus usage is concentrated in 3 queries -- review if those truly needed Opus-level reasoning</div>
+
+</div>
+<footer>
+  <p><span class="om">&#x1F549;</span> Generated by the <a href="https://github.com/aidgoc/om">Darshana Architecture</a></p>
+  <p style="margin-top: 0.3rem;">2026-03-21 22:03:23</p>
+  <p style="margin-top: 0.5rem;">By Harshwardhan (HNG) &mdash; MIT License</p>
+  <p style="margin-top: 1rem; font-style: italic; color: var(--accent);">
+    &#x090F;&#x0915;&#x0902; &#x0938;&#x0926;&#x094D; &#x0935;&#x093F;&#x092A;&#x094D;&#x0930;&#x093E; &#x092C;&#x0939;&#x0941;&#x0927;&#x093E; &#x0935;&#x0926;&#x0928;&#x094D;&#x0924;&#x093F;<br>
+    &ldquo;Truth is one. The wise call it by many names.&rdquo;<br>
+    <span style="color: var(--muted);">&mdash; Rig Veda 1.164.46</span>
+  </p>
+</footer>
+</body>
+</html>
