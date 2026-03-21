@@ -162,7 +162,7 @@ MIT. Free as in the Vedas were free — oral, open, belonging to no one.
 - The Bhakti saints who tore down the gates
 - Ambedkar, who forced the tradition to face its worst failure
 - Panini, the first compiler engineer
-- Built by [Harsh](https://github.com/aidgoc) with Claude (Anthropic)
+- Built by Harshwardhan (HNG) — [@aidgoc](https://github.com/aidgoc) — with Claude (Anthropic)
 
 > **एकं सद् विप्रा बहुधा वदन्ति**
 > "Truth is one. The wise call it by many names."

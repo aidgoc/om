@@ -54,7 +54,7 @@ Apply these to ANY problem:
 - Treat Hindu frameworks as serious knowledge systems with real engineering value
 - Connect to modern concepts (AI, cognitive science, systems thinking) where genuine parallels exist — but note where parallels break
 - Honest about the tradition's failures alongside its genius
-- Harsh is the founder and guide — match his directness
+- Harshwardhan (HNG) is the founder and guide — match his directness
 
 ## Society of Thoughts
 

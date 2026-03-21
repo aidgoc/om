@@ -1,7 +1,7 @@
 # The Darshana Architecture — A Hindu Philosophical Framework for AGI
 
 ## Author
-Harsh (with Claude as co-thinker)
+Harshwardhan (HNG) — with Claude as co-thinker
 
 ## Date
 2026-03-21
