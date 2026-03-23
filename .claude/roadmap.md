@@ -63,6 +63,34 @@
 - [ ] Add Vritti Filter to Mik's output pipeline
 - [ ] Darshana-aligned agents in Mik's fleet
 
+### Training the Darshana LLM ✅ (pipeline ready, awaiting GPU)
+- [x] Training data generator — 329 darshana reasoning examples (331K tokens)
+- [x] Curriculum converter — 1,461 entries from 29 lessons (965K tokens)
+- [x] Fine-tuning infrastructure — LoRA on Llama/Mistral/Qwen (finetune.py)
+- [x] Vritti reward model — 5-class classifier for RLHF (reward_model.py)
+- [x] Evaluation suite — method adherence, depth, novelty, vritti (evaluate.py)
+- [x] Serving infrastructure — Flask API with auto-routing (serve.py)
+- [x] Kimi K2.5 pipeline — KTransformers + LlamaFactory (finetune_kimi.py)
+- [x] Kimi K2.5 serving — MoE offloading with LoRA hot-swap (serve_kimi.py)
+- [x] Kimi K2.5 setup script — one-command environment (setup_kimi.sh)
+
+### AWS GPU Access ⏳ WAITING
+- [x] AWS account verified (Heft Energy, 390449413787)
+- [x] Active credits confirmed (~$1,098 used, credits still covering 100%)
+- [x] On-Demand P instance quota requested (96 vCPUs, Case #177425473500754)
+- [x] Spot P instance quota requested (96 vCPUs, Case #177425469800882)
+- [ ] Quota approved — CHECK STATUS EACH SESSION
+- [ ] Upload training data to S3
+- [ ] Launch p4d.24xlarge spot (8× A100, ~$10-13/hr)
+- [ ] Train all 8 adapters (~16-22 hrs, ~$160-200 covered by credits)
+- [ ] Evaluate and publish adapters to HuggingFace
+
+### Mik Integration
+- [ ] Replace Mik's agent routing with Buddhi
+- [ ] Add Smriti as Mik's persistent memory
+- [ ] Add Vritti Filter to Mik's output pipeline
+- [ ] Darshana-aligned agents in Mik's fleet
+
 ### Community
 - [ ] Publish blog post
 - [ ] Submit to Hacker News / AI Twitter
@@ -80,7 +108,7 @@
 
 ## Session Stats
 
-Built in 1 session. ~43 parallel agents across 8 waves.
+Built across 1 session. ~48 parallel agents across 12 waves.
 - Wave 1: 5 agents (Sanskrit Phase 1 completion + Philosophy + Connections)
 - Wave 2: 9 agents (5 Upanishads + 3 Gita sections + Samkhya)
 - Wave 3: 11 agents (Yoga Sutras + 5 remaining schools + 3 epics + 3 traditions)
@@ -90,3 +118,15 @@ Built in 1 session. ~43 parallel agents across 8 waves.
 - Wave 7: 5 agents (Smriti + Pratyaksha + Manas + Shakti + Antahkarana)
 - Wave 8: 3 agents (CLI harness + Setup/install + HTML reports)
 - Wave 9: 2 agents (Claude Code plugin + MCP server)
+- Wave 10: 3 agents (Training data generator + Fine-tune infra + Curriculum converter)
+- Wave 11: 1 agent (Kimi K2.5 pipeline)
+- Wave 12: AWS quota requests submitted
+
+## Key Numbers
+- Curriculum: 29 lessons, ~15,000 lines
+- Architecture: 16 Python modules, ~14,000 lines of code
+- Training data: 1,790 examples, ~1.3M tokens
+- Tests: 48 passing, 95% router accuracy, 100% filter accuracy
+- Plugin: 10 skills, 1 agent, 1 hook (installed in Claude Code)
+- MCP: 9 tools, 2 resource types
+- AWS: credits active, GPU quota pending

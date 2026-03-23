@@ -50,6 +50,22 @@ om/
 │   ├── .claude-plugin/    # Marketplace manifest
 │   └── plugins/darshana/  # Plugin distribution copy
 │
+├── training/              # ML training pipeline
+│   ├── generate_data.py   # Darshana reasoning examples (329 examples)
+│   ├── curriculum_to_data.py # Curriculum → training data (1,461 entries)
+│   ├── finetune.py        # Generic LoRA fine-tuning (Llama/Mistral/Qwen)
+│   ├── finetune_kimi.py   # Kimi K2.5 specific (KTransformers + LlamaFactory)
+│   ├── evaluate.py        # 4-metric eval (adherence, depth, novelty, vritti)
+│   ├── serve.py           # Generic HTTP serving
+│   ├── serve_kimi.py      # Kimi K2.5 serving with MoE offloading
+│   ├── reward_model.py    # Vritti classifier as RLHF reward model
+│   ├── setup_kimi.sh      # One-command Kimi K2.5 environment setup
+│   ├── config.yaml        # Generic training config
+│   ├── config_kimi.yaml   # Kimi K2.5 specific config
+│   ├── requirements.txt   # ML dependencies
+│   ├── examples/          # Hand-crafted training examples (per darshana)
+│   └── data/              # Generated JSONL datasets (~1.3M tokens)
+│
 ├── tests/                 # Test suite + benchmarks
 │   ├── test_router.py     # 15 router tests
 │   ├── test_filter.py     # 13+ filter tests (48 total passing)

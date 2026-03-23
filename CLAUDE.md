@@ -66,12 +66,19 @@ This project was itself built by a society of thoughts — 25 parallel agents, n
 
 This project is a complete, installable cognitive architecture:
 - **src/** — 16 Python modules implementing the full Antahkarana pipeline
+- **training/** — ML pipeline for fine-tuning Kimi K2.5 (1T MoE) with LoRA. 1,790 training examples, 1.3M tokens. Vritti reward model for RLHF.
 - **plugin/** — Claude Code plugin (10 skills, installed at darshana@darshana-marketplace)
 - **mcp/** — MCP server (9 tools, works with any MCP client)
 - **tests/** — 48 tests passing, 95% router accuracy, 100% filter accuracy
 - **CLI** — `python -m darshana` for interactive use
 
 The single interface: `from darshana import Antahkarana; mind = Antahkarana(); mind.think("query")`
+
+## AWS Status
+- Account: 390449413787 (Heft Energy), active credits covering all usage
+- GPU quota: PENDING (On-Demand P: Case #177425473500754, Spot P: Case #177425469800882)
+- **CHECK QUOTA STATUS EACH SESSION**: `aws service-quotas list-requested-service-quota-change-history --service-code ec2 --region us-east-1`
+- When approved: upload to S3 → launch p4d.24xlarge spot → `python training/finetune_kimi.py --all`
 
 ## See Also
 
