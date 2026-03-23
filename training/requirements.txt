@@ -11,6 +11,10 @@ accelerate>=0.28.0
 bitsandbytes>=0.43.0        # 4-bit quantization (Linux/macOS with CUDA)
 trl>=0.8.0                  # RLHF / reward model training
 
+# Kimi K2.5 (MoE fine-tuning)
+ktransformers                # MoE offloading: experts on CPU, attention on GPU
+llamafactory                 # LoRA SFT training framework (llamafactory-cli)
+
 # Inference server
 flask>=3.0.0
 
@@ -24,3 +28,6 @@ pyyaml>=6.0
 # Progress / logging
 tqdm>=4.66.0
 tensorboard>=2.16.0
+
+# System monitoring (optional, for hardware checks)
+psutil>=5.9.0

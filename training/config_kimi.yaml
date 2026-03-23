@@ -1,0 +1,96 @@
+# Kimi K2.5 Fine-Tuning Configuration
+# ====================================
+# Configuration for LoRA SFT on Kimi K2.5 (1T MoE, 32B active).
+# Uses KTransformers + LlamaFactory for efficient MoE fine-tuning.
+#
+# The MoE architecture mirrors the Darshana Architecture:
+#   384 experts per layer <-> 6 darshana reasoning engines
+#   top-8 routing         <-> Buddhi router
+#   shared expert         <-> common reasoning substrate
+#
+# Override any value via CLI flags to finetune_kimi.py.
+
+base_model: moonshotai/Kimi-K2.5-Instruct
+model_type: kimi_k2.5
+
+# KTransformers offloads MoE expert layers to CPU/RAM,
+# keeping attention layers (LoRA targets) on GPU.
+use_ktransformers: true
+
+# Kimi K2.5 architecture (for reference, not configurable)
+architecture:
+  total_params: "1T"
+  active_params: "32B"
+  type: "MoE (Mixture of Experts)"
+  layers: 61                     # 1 dense + 60 MoE
+  experts_per_layer: 384
+  active_experts: 8              # top-8 routing + shared expert
+  attention_hidden_dim: 7168
+  moe_hidden_dim_per_expert: 2048
+  context_window: 262144         # 256K tokens
+
+# LoRA configuration
+# Only attention layers are targeted (they stay on GPU).
+# MoE expert layers stay frozen on CPU/RAM.
+lora:
+  rank: 16
+  alpha: 32
+  dropout: 0.1
+  target_modules:
+    - q_proj
+    - k_proj
+    - v_proj
+    - o_proj
+
+# Training hyperparameters
+# Batch size 1 + gradient accumulation 16 = effective batch size 16
+training:
+  epochs: 3
+  batch_size: 1
+  learning_rate: 2.0e-5
+  warmup_ratio: 0.1
+  max_length: 4096
+  gradient_accumulation_steps: 16
+  bf16: true
+  lr_scheduler: cosine
+  logging_steps: 10
+  save_steps: 200
+  eval_steps: 200
+  weight_decay: 0.01
+
+# Hardware requirements
+hardware:
+  min_gpu: "2x RTX 4090 (48GB total)"
+  min_ram: "128GB (512GB+ recommended)"
+  min_disk: "800GB (for model + adapters)"
+  estimated_time_per_adapter: "2-4 hours"
+
+# Output directory for saved adapters
+output_dir: training/adapters/kimi-k2.5
+
+# The six darshana names (used for data file lookup and adapter paths)
+darshanas:
+  - nyaya
+  - samkhya
+  - yoga
+  - vedanta
+  - mimamsa
+  - vaisheshika
+
+# Cloud training cost estimates (per adapter, ~500 examples, 3 epochs)
+cloud_costs:
+  runpod:
+    gpu: "2x RTX 4090"
+    cost_per_hour: 0.74
+    estimated_hours: 3
+    estimated_cost: 2.22
+  lambda:
+    gpu: "1x A100 80GB"
+    cost_per_hour: 1.10
+    estimated_hours: 2
+    estimated_cost: 2.20
+  vast_ai:
+    gpu: "2x RTX 4090"
+    cost_per_hour: 0.50
+    estimated_hours: 3
+    estimated_cost: 1.50
