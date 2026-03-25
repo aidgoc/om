@@ -1,0 +1,16 @@
+{
+  "description": "Darshana vritti self-check hook — classifies reasoning quality before finalizing responses",
+  "hooks": {
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "prompt",
+            "prompt": "Before finalizing, perform a silent vritti self-check on the response you are about to deliver. Scan each major claim: Is it pramana (grounded in evidence from this session, valid inference, or reliable training knowledge)? Is it vikalpa (sounds meaningful but says nothing — watch for 'it depends', 'there are trade-offs', 'consider your needs' without specifics)? Is it smriti (a recalled generic answer rather than reasoning from this specific case)? Is it nidra (covering ignorance with fluent generation)? If you detect vikalpa, replace the empty statement with a concrete one or remove it. If nidra, say what you don't know. If pure smriti on a question requiring fresh reasoning, flag it. Do not add a visible 'vritti check' section — only surface corrections when you catch something. Return 'approve' if the response passes the vritti filter, or 'block' with the specific vritti issue found.",
+            "timeout": 30
+          }
+        ]
+      }
+    ]
+  }
+}

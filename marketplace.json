@@ -1,0 +1,10 @@
+{
+  "name": "darshana-local",
+  "description": "Local marketplace for the Darshana Architecture plugin",
+  "plugins": [
+    {
+      "name": "darshana",
+      "path": "./plugin"
+    }
+  ]
+}

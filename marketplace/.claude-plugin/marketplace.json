@@ -1,0 +1,16 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "darshana-marketplace",
+  "description": "The Darshana Architecture — Hindu philosophical reasoning engines for AI",
+  "owner": {
+    "name": "Harshwardhan (HNG)"
+  },
+  "plugins": [
+    {
+      "name": "darshana",
+      "description": "Six reasoning engines (Nyaya, Samkhya, Yoga, Vedanta, Mimamsa, Vaisheshika) for deeper AI thinking",
+      "source": "./plugins/darshana",
+      "category": "development"
+    }
+  ]
+}
