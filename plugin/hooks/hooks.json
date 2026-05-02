@@ -1,13 +1,13 @@
 {
-  "description": "Darshana vritti self-check hook — classifies reasoning quality before finalizing responses",
+  "description": "Darshana vritti self-check — catches substanceless responses and feeds corrections back to Claude",
   "hooks": {
     "Stop": [
       {
         "hooks": [
           {
-            "type": "prompt",
-            "prompt": "Respond with ONLY raw JSON. No markdown, no code fences, no explanation.\n\nReview whether the assistant's last response actually addresses the user's question with substance.\n\nIf there is no clear assistant response to evaluate: {\"decision\": \"allow\"}\n\nCheck for these quality problems:\n- Empty hedging: the ENTIRE response is vague phrases like 'it depends', 'there are trade-offs', 'consider your needs' with no concrete follow-up\n- Generic recall: the response is purely textbook-style and could apply to any similar question with zero specifics from this conversation\n- Covering ignorance: the response fluently generates text about something while demonstrating zero actual knowledge\n\nIMPORTANT: A response that contains SOME hedging or caveats but ALSO provides concrete actions, specific details, or useful analysis should be ALLOWED. Only block when the response is PREDOMINANTLY empty — when more than 80% of the content is filler with no actionable substance.\n\nDefault to allowing. Block is the exception, not the rule.\n\nTo allow: {\"decision\": \"allow\"}\nTo block: {\"decision\": \"block\", \"reason\": \"[brief description]\"}",
-            "timeout": 30
+            "type": "command",
+            "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/hooks/vritti-check.py\"",
+            "timeout": 10
           }
         ]
       }
