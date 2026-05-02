@@ -11,10 +11,16 @@ om/
 ├── pyproject.toml         # pip install darshana
 ├── setup.sh               # One-command installer
 ├── Makefile               # Developer convenience
-├── .claude/               # Project instructions (split)
-│   ├── structure.md       # This file — organization rules
-│   ├── content.md         # Writing style, reasoning rules, honesty rules
-│   └── roadmap.md         # Learning path and curriculum (COMPLETE)
+├── .claude/               # Project instructions
+│   ├── memory/            # Project knowledge (loaded via @-include)
+│   │   ├── conventions.md # Coding conventions + project references
+│   │   ├── structure.md   # This file — organization rules
+│   │   ├── content.md     # Writing style, reasoning rules, honesty rules
+│   │   └── roadmap.md     # Build history + next steps
+│   ├── skills/            # Project-level skills (e.g. context.md)
+│   ├── agents/            # Project-level subagents
+│   ├── tools/             # Project-level tools
+│   └── settings.local.json # Local settings (gitignored)
 │
 ├── src/                   # The Darshana Architecture — Python implementation
 │   ├── antahkarana.py     # Master pipeline — the ONE interface
@@ -33,11 +39,13 @@ om/
 │   ├── __main__.py        # CLI harness (REPL + single-query)
 │   └── demo_*.py          # Demos for each module
 │
-├── plugin/                # Claude Code plugin
+├── plugin/                # Claude Code plugin (v0.2.2)
 │   ├── .claude-plugin/    # Plugin manifest
 │   ├── skills/            # 10 skills (/darshana, /nyaya, /samkhya, etc.)
 │   ├── agents/            # darshana-buddhi auto-routing agent
-│   └── hooks/             # vritti-check output quality hook
+│   └── hooks/             # Stop hook
+│       ├── hooks.json     # type:command → vritti-check.py
+│       └── vritti-check.py # Heuristic quality gate (hedging vs substance)
 │
 ├── mcp/                   # MCP server (any AI client)
 │   ├── server.py          # 9 tools, 2 resource types

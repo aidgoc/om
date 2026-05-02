@@ -77,6 +77,25 @@
 
 ---
 
+## COMPLETED — Plugin v0.2.2 + Repo Hygiene (May 2026) ✅
+
+### Plugin Hook Rewrite ✅
+- [x] PR #1 (virajshethia-code) merged: prompt-type Stop hook → command-type
+- [x] New `hooks/vritti-check.py` — heuristic quality gate (no LLM call, 10s timeout)
+- [x] Scores hedging density vs substance markers (code blocks, file paths, URLs, etc.)
+- [x] Blocks with targeted correction instructions instead of leaking eval prompt
+- [x] Synced across all 4 locations: `plugin/`, `marketplace/`, installed cache, registry
+- [x] Cache directory cleanly renamed `0.2.0/` → `0.2.2/`, `installed_plugins.json` updated
+- [x] 8/8 smoke tests pass (5 PR cases + 3 graceful-failure cases)
+
+### `.claude/` Reorganization ✅
+- [x] Standardized into 4 subfolders: `memory/`, `skills/`, `tools/`, `agents/`
+- [x] Project knowledge (conventions, structure, content, roadmap) moved into `memory/`
+- [x] Empty `rules/` and `tasks/` directories dropped
+- [x] CLAUDE.md slimmed; @-include points at `.claude/memory/conventions.md`
+
+---
+
 ## NEXT — Ship & Deploy
 
 ### Immediate (this week)
@@ -105,11 +124,11 @@
 
 ---
 
-## Key Numbers (updated April 2026)
+## Key Numbers (updated May 2026)
 - Architecture: 16 Python modules, ~14,000 lines
 - Tests: 48 passing, 95% router accuracy, 100% filter accuracy
 - Benchmark: 19 models scanned, 8 experiment runs, ~6,000 API calls, ~$15
-- Plugin: 10 skills, 1 agent, 1 hook (installed in Claude Code)
+- Plugin: v0.2.2, 10 skills, 1 agent, 1 command-type Stop hook
 - MCP: 9 tools, 2 resource types
 - SDK: v0.3.0, guard() + last_meta(), built for PyPI
 - Paper: 3,500 words, on GitHub, arXiv pending
