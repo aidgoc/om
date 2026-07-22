@@ -50,3 +50,8 @@ coverage.xml
 
 # mypy
 .mypy_cache/
+
+# Local-only Claude memory (PUBLIC repo — keep working memory out of git)
+.claude/memory/MEMORY.md
+.claude/memory/feedback_benchmark_methodology.md
+.claude/settings.local.json
